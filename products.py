@@ -34,7 +34,7 @@ class Product:
         self.__active = False
 
     def show(self):
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.__quantity}")
+        return f"{self.name}, Price: {self.price}, Quantity: {self.__quantity}"
 
     def buy(self, quantity: int) -> float:
         """This function buys a given quantity, returns its price and updates the quantity of the product."""
