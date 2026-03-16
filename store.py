@@ -1,0 +1,57 @@
+import products
+
+
+class Store:
+    def __init__(self, product_list: [products.Product]):
+
+        self.inventory = product_list
+
+    def add_product(self, product: products.Product):
+        self.inventory.append(product)
+
+    def remove_product(self, product: products.Product):
+        self.inventory.remove(product)
+
+    def get_total_quantity(self) -> int:
+        """Sums all the quantities of each product."""
+        total = 0
+        for product in self.inventory:
+            total += product.get_quantity()
+
+        return total
+
+    def get_all_products(self) -> [products.Product]:
+        """Returns a list of all products that are active"""
+
+        active_products = [product for product in self.inventory if product.is_active()]
+        return active_products
+
+    def order(self, shopping_list: ([products.Product], [int])) -> float:
+        """Gets a list of tuples, where each tuple is:
+        (product[product.Product], quantity[int])
+        and buys the products and returns the total price of the order."""
+
+        total_price = 0
+        for item in shopping_list:
+            product = item[0]
+            quantity = item[1]
+
+            if product in self.get_all_products():
+                try:
+                    total_price += product.buy(quantity)
+                except:
+                    print(f"Couldn't buy product. {product.name}")
+        return total_price
+
+
+if __name__ == "__main__":
+    product_list = [
+        products.Product("MacBook Air M2", price=1450, quantity=100),
+        products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        products.Product("Google Pixel 7", price=500, quantity=250),
+    ]
+
+    best_buy = Store(product_list)
+    products = best_buy.get_all_products()
+    print(best_buy.get_total_quantity())
+    print(best_buy.order([(products[0], 1), (products[1], 2)]))
