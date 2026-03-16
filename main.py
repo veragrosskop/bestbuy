@@ -55,7 +55,7 @@ def order_menu(s: store.Store, shopping_list) -> List[Tuple[products.Product, in
             for item in shopping_list:
                 if item[0] == prod:
                     reserved_amount += item[1]
-
+        print(f"How many do you want to add to your reservation of: {reserved_amount}.")
         amount = ask_int_input(0, available - reserved_amount)  # validate quantity
         shopping_list.append((prod, amount))
         print("Product added to list!")
