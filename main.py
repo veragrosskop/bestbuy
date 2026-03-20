@@ -27,7 +27,9 @@ def ask_int_input(min_choices: int, max_choices: int):
         return ask_int_input(min_choices, max_choices)
 
 
-def order_menu(s: store.Store, shopping_list) -> List[Tuple[products.Product, int]]:
+def order_menu(
+    s: store.Store, shopping_list, subtotal
+) -> List[Tuple[products.Product, int]]:
     """Recursive function for order menu.
     Will recursively ask a user to choose a product and an order amount.
     Until the user presses enter to exit the menu twice.
@@ -44,22 +46,27 @@ def order_menu(s: store.Store, shopping_list) -> List[Tuple[products.Product, in
     product_choice = ask_int_input(1, len(inventory))
 
     if product_choice == 0:  # conclude order and exit to main menu
-        return shopping_list
+        return s, shopping_list, subtotal
 
-    elif product_choice >= 1:  # buy a product
+    else:  # buy a product
         prod = inventory[product_choice - 1]
         available = prod.get_quantity()
         reserved_amount = 0
-        # check if you already added some to the list
+        # check if you already added some of the product to the list
         if shopping_list:  # if there's already something in the shopping list
             for item in shopping_list:
                 if item[0] == prod:
                     reserved_amount += item[1]
+
         print(f"How many do you want to add to your reservation of: {reserved_amount}.")
         amount = ask_int_input(0, available - reserved_amount)  # validate quantity
         shopping_list.append((prod, amount))
-        print("Product added to list!")
-        return order_menu(s, shopping_list)  # prompt for new product acquisition
+        print(f"--> Product: {prod.name}. Amount: {amount} added to list!")
+        subtotal += s.order(shopping_list)
+
+        return order_menu(
+            s, shopping_list, subtotal
+        )  # prompt for new product acquisition
 
 
 def product_menu(s: store.Store):
@@ -96,9 +103,7 @@ def start(s: store.Store):
             print(f"Total of {quantity} items in store")
             start(s)
         case 3:
-
-            shopping_list = order_menu(s, [])  # generate the shopping list
-            total = s.order(shopping_list)  # get total amount and place order
+            shopping_list, total = order_menu(s, [], 0)  # generate the shopping list
             print(f"Order made! Total payment: {total}")
             start(s)
         case 4:

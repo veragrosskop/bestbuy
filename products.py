@@ -16,28 +16,39 @@ class Product:
         else:
             self.__quantity = quantity
 
-        self.__active = True
+        self.__active = self.__quantity > 0  # deactivate if <0
 
     def get_quantity(self) -> int:
+        """Returns the quantity of the product."""
         return self.__quantity
 
     def set_quantity(self, quantity: int):
+        """This function sets the quantity of the product.
+        If the quantity is less than 0, it will deactivate the product."""
         self.__quantity = quantity
+        if self.__quantity == 0:
+            self.deactivate()
 
     def is_active(self) -> bool:
+        """Getter for the active attribute."""
         return self.__active
 
     def activate(self):
+        """This function activates the product."""
         self.__active = True
 
     def deactivate(self):
+        """This function deactivates the product."""
         self.__active = False
 
     def show(self):
+        """Returns a string of product details: name, price, quantity."""
         return f"{self.name}, Price: {self.price}, Quantity: {self.__quantity}"
 
     def buy(self, quantity: int) -> float:
-        """This function buys a given quantity, returns its price and updates the quantity of the product."""
+        """This function buys a given quantity. It checks if that quantity is available.
+        If it's available it returns the purchase price and updates the quantity of the product.
+        """
 
         if quantity > self.__quantity:
             Exception(
@@ -47,7 +58,8 @@ class Product:
         elif quantity < 0:
             Exception(f"There aren't enough {self.name}'s in storage. /n")
         else:
-            self.__quantity -= quantity
+            new_quantity = self.__quantity - quantity
+            self.set_quantity(new_quantity)
             total_price = self.price * quantity
 
             return total_price

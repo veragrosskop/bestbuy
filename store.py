@@ -1,8 +1,9 @@
 import products
+from typing import List, Tuple
 
 
 class Store:
-    def __init__(self, product_list: [products.Product]):
+    def __init__(self, product_list: List[products.Product]):
 
         self.inventory = product_list
 
@@ -20,13 +21,13 @@ class Store:
 
         return total
 
-    def get_all_products(self) -> [products.Product]:
+    def get_all_products(self) -> List[products.Product]:
         """Returns a list of all products that are active"""
 
         active_products = [product for product in self.inventory if product.is_active()]
         return active_products
 
-    def order(self, shopping_list: ([products.Product], [int])) -> float:
+    def order(self, shopping_list: List[Tuple[products.Product, int]]) -> float:
         """Gets a list of tuples, where each tuple is:
         (product[product.Product], quantity[int])
         and buys the products and returns the total price of the order."""
@@ -37,8 +38,5 @@ class Store:
             quantity = item[1]
 
             if product in self.get_all_products():
-                try:
-                    total_price += product.buy(quantity)
-                except:
-                    print(f"Couldn't buy product. {product.name}")
+                total_price += product.buy(quantity)
         return total_price
