@@ -62,8 +62,11 @@ def order_menu(
         print(f"How many do you want to add to your reservation of: {reserved_amount}.")
         amount = ask_int_input(0, available - reserved_amount)  # validate quantity
         shopping_list.append((prod, amount))
-        print(f"--> Product: {prod.name}. Amount: {amount} added to list!")
-        subtotal += s.order(shopping_list)
+        subtotal += s.order([(prod, amount)])
+        print(
+            f"--> Product: {prod.name}. Amount: {amount} added to list! subtotal is {subtotal}"
+        )
+
         return order_menu(
             s, shopping_list, subtotal
         )  # prompt for new product acquisition
