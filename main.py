@@ -7,23 +7,25 @@ import products
 
 def ask_int_input(min_choices: int, max_choices: int):
     """ask user to enter integer input. Recursive function for user input."""
-    choice = input("Please choose a number: ")
+    choice = input("\nPlease choose a number: ")
 
-    try:
-        if not choice:  # return to main menu/finish order
-            return 0
-
+    if choice == 0:  # return to main menu/finish order
+        return 0
+    elif choice == "":
+        return 0
+    elif choice.isdigit():
+        choice = int(choice)
+        if choice < min_choices or choice > max_choices:
+            print(
+                f"{choice} is not a valid integer in range {min_choices} to {max_choices}"
+            )
+            return ask_int_input(min_choices, max_choices)
         else:
-            choice = int(choice)
-            if choice < min_choices or choice > max_choices:
-                print(
-                    f"{choice} is not a valid integer in range {min_choices} to {max_choices}"
-                )
-                return ask_int_input(min_choices, max_choices)
-            else:
-                return choice
-    except ValueError:
-        print(f"{choice} is not a valid integer")
+            return choice
+    else:
+        print(
+            f"{choice} is not a valid integer in range {min_choices} to {max_choices}"
+        )
         return ask_int_input(min_choices, max_choices)
 
 
@@ -43,9 +45,8 @@ def order_menu(
     product_menu(s)
     # initialize updated inventory
     inventory = s.get_all_products()
-    product_choice = ask_int_input(1, len(inventory))
-
-    if product_choice == 0:  # conclude order and exit to main menu
+    product_choice = ask_int_input(0, len(inventory))
+    if product_choice == 0 or "":  # conclude order and exit to main menu
         return s, shopping_list, subtotal
 
     else:  # buy a product
@@ -63,7 +64,6 @@ def order_menu(
         shopping_list.append((prod, amount))
         print(f"--> Product: {prod.name}. Amount: {amount} added to list!")
         subtotal += s.order(shopping_list)
-
         return order_menu(
             s, shopping_list, subtotal
         )  # prompt for new product acquisition
@@ -80,7 +80,7 @@ def product_menu(s: store.Store):
 
 
 def start(s: store.Store):
-    """main menu of the store"""
+    """Main menu of the store."""
 
     print(
         "Store Menu\n"
@@ -103,7 +103,7 @@ def start(s: store.Store):
             print(f"Total of {quantity} items in store")
             start(s)
         case 3:
-            shopping_list, total = order_menu(s, [], 0)  # generate the shopping list
+            s, shopping_list, total = order_menu(s, [], 0)  # generate the shopping list
             print(f"Order made! Total payment: {total}")
             start(s)
         case 4:

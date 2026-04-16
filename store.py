@@ -4,13 +4,15 @@ from typing import List, Tuple
 
 class Store:
     def __init__(self, product_list: List[products.Product]):
-
+        """Initializes the store."""
         self.inventory = product_list
 
     def add_product(self, product: products.Product):
+        """Adds a product to the store."""
         self.inventory.append(product)
 
     def remove_product(self, product: products.Product):
+        """Removes a product from the store."""
         self.inventory.remove(product)
 
     def get_total_quantity(self) -> int:

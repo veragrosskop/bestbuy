@@ -1,6 +1,7 @@
 class Product:
 
     def __init__(self, name: str, price: float, quantity: int):
+        """This function creates a new product."""
         if not name:
             Exception("Product name is empty")
         else:
