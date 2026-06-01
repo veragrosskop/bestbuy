@@ -46,7 +46,7 @@ def order_menu(
     # initialize updated inventory
     inventory = s.get_all_products()
     product_choice = ask_int_input(0, len(inventory))
-    if product_choice == 0 or "":  # conclude order and exit to main menu
+    if product_choice == 0 or product_choice == "":  # conclude order and exit to main menu
         return s, shopping_list, subtotal
 
     else:  # buy a product
@@ -60,7 +60,7 @@ def order_menu(
                     reserved_amount += item[1]
 
         print(f"How many do you want to add to your reservation of: {reserved_amount}.")
-        amount = ask_int_input(0, available - reserved_amount)  # validate quantity
+        amount = ask_int_input(0, available)  # validate quantity
         shopping_list.append((prod, amount))
         subtotal += s.order([(prod, amount)])
         print(
